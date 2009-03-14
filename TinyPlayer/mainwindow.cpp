@@ -120,7 +120,7 @@ void MainWindow::on_pushButtonPlay_clicked()
     sprintf(cdata,   ":vmem-data=%lld", (long long int)(intptr_t)media);
     sprintf(width,   ":vmem-width=%i", VIDEOWIDTH);
     sprintf(height,  ":vmem-height=%i", VIDEOHEIGHT);
-    sprintf(chroma,  ":vmem-chroma=%s", "YUY2");
+    sprintf(chroma,  ":vmem-chroma=%s", "RV32");
     sprintf(pitch,   ":vmem-pitch=%i", VIDEOWIDTH * 4);
     media->media_id = 1;
 
