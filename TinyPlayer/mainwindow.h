@@ -6,7 +6,13 @@
 #include <QFileDialog>
 #include <QtDebug>
 #include <QMutex>
+
+//FIXME: remove this include after binding is completed
 #include "vlc/vlc.h"
+
+#include "VLCInstance.h"
+#include "VLCMedia.h"
+#include "VLCMediaPlayer.h"
 
 #define VIDEOWIDTH 854
 #define VIDEOHEIGHT 480
@@ -37,10 +43,10 @@ private:
     QString currentMedia;
 
     // libvlc
-    libvlc_exception_t ex;
-    libvlc_instance_t *libvlc;
-    libvlc_media_t *m;
-    libvlc_media_player_t *mp;
+    libvlc_exception_t      ex;
+    LibVLCpp::Instance*     _instance;
+    LibVLCpp::Media*        _media;
+    LibVLCpp::MediaPlayer*  _mediaPlayer;
 
 private slots:
     void on_pushButtonPlay_clicked();

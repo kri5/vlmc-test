@@ -95,11 +95,8 @@ void MainWindow::initVLC()
         //"--plugin-path", VLC_TREE "/modules",
         //"--ignore-config", /* Don't use VLC's config files */
     };
-    int vlc_argc = sizeof(vlc_argv) / sizeof(*vlc_argv);
-
-    libvlc_exception_init(&ex);
-    libvlc = libvlc_new(vlc_argc, vlc_argv, &ex);
-    catchException();
+    int argc = sizeof(vlc_argv) / sizeof(*vlc_argv);
+    this->_instance = new LibVLCpp::Instance(argc, vlc_argv);
 }
 
 void MainWindow::on_pushButtonPlay_clicked()
@@ -108,8 +105,7 @@ void MainWindow::on_pushButtonPlay_clicked()
     media = (struct ctx*)malloc(sizeof(*media));
     media->pixels = (uchar*)malloc((sizeof(*(media->pixels)) * VIDEOHEIGHT * VIDEOWIDTH) * 4);
     media->mutex = new QMutex();
-    libvlc_media_t *m;
-    libvlc_media_player_t *mp;
+
     char clock[64], cunlock[64], cdata[64];
     char width[32], height[32], pitch[32], chroma[32];
     if (currentMedia.isEmpty())
@@ -138,19 +134,19 @@ void MainWindow::on_pushButtonPlay_clicked()
     };
 
     int media_argc = sizeof(media_argv) / sizeof(*media_argv);
-    m = libvlc_media_new(libvlc, currentMedia.toLocal8Bit(), &ex);
-    if (catchException()) return;
+    qDebug() << "Je suis arrive ici, c'est deja pas mal !" << this->_instance->getInternalPtr();
+    this->_media = new LibVLCpp::Media(this->_instance, currentMedia);
+
+    qDebug() << "avant la boucle";
     for (int i = 0; i < media_argc; i++ )
     {
         qDebug() << media_argv[i];
-        libvlc_media_add_option( m, media_argv[i], &ex );
-        if(catchException()) return;
+        this->_media->addOption( media_argv[i] );
     }
-    mp = libvlc_media_player_new_from_media(m, &ex);
+    this->_mediaPlayer = new LibVLCpp::MediaPlayer(this->_media);
     qDebug() << "After mplayer new from media";
-    libvlc_media_release(m);
-    if (catchException()) return;
-    libvlc_media_player_play(mp, &ex);
+    delete this->_media;
+    libvlc_media_player_play(this->_mediaPlayer->getInternalPtr(), &ex);
     qDebug() << "After Play";
     if (catchException()) return;
 }
