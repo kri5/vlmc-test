@@ -6,6 +6,7 @@
 #include <QFileDialog>
 #include <QtDebug>
 #include <QMutex>
+#include <QTime>
 #include "vlc/vlc.h"
 
 #define VIDEOWIDTH 854
@@ -43,10 +44,13 @@ private:
     libvlc_media_player_t *mp;
 
 private slots:
-    void on_pushButtonPlay_clicked();
+    void on_pushButtonNext_clicked();
+    void on_pushButtonPrevious_clicked();
+    void on_pushButtonPlayPause_clicked();
+    void on_pushButtonLaunch_clicked();
     void on_actionOpen_triggered();
     void on_actionQuit_triggered();
-    void on_NewFrameEventFired(struct ctx*);
+    void NewFrameEventFired(struct ctx*);
 
 signals:
     void eventNewFrameFired(struct ctx*);
