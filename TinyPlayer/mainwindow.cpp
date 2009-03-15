@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     errorHandler = new QErrorMessage(this);
     MainWindow::window = this;
-    connect(this, SIGNAL(eventNewFrameFired(struct ctx*)), this, SLOT(on_NewFrameEventFired(struct ctx*)));
+    connect(this, SIGNAL(eventNewFrameFired(struct ctx*)), this, SLOT(NewFrameEventFired(struct ctx*)));
     initVLC();
 }
 
@@ -33,7 +33,10 @@ void MainWindow::on_actionOpen_triggered()
     if (currentMedia.isEmpty())
         ui->pushButtonPlay->setEnabled(false);
     else
+    {
+        currentMedia.prepend("file://");
         ui->pushButtonPlay->setEnabled(true);
+    }
 }
 
 bool MainWindow::catchException()
@@ -67,7 +70,7 @@ void MainWindow::unlock(struct ctx *ctx)
     ctx->mutex->unlock();
 }
 
-void MainWindow::on_NewFrameEventFired(struct ctx *ctx)
+void MainWindow::NewFrameEventFired(struct ctx *ctx)
 {
     QImage image(VIDEOWIDTH, VIDEOHEIGHT, QImage::Format_RGB32);
 
@@ -138,19 +141,10 @@ void MainWindow::on_pushButtonPlay_clicked()
     };
 
     int media_argc = sizeof(media_argv) / sizeof(*media_argv);
-    m = libvlc_media_new(libvlc, currentMedia.toLocal8Bit(), &ex);
+    libvlc_vlm_add_broadcast(libvlc, "default", currentMedia.toLocal8Bit(),
+                             "#duplicate{dst=display{vmem}}",
+                             media_argc, media_argv, true, false, &ex);
     if (catchException()) return;
-    for (int i = 0; i < media_argc; i++ )
-    {
-        qDebug() << media_argv[i];
-        libvlc_media_add_option( m, media_argv[i], &ex );
-        if(catchException()) return;
-    }
-    mp = libvlc_media_player_new_from_media(m, &ex);
-    qDebug() << "After mplayer new from media";
-    libvlc_media_release(m);
-    if (catchException()) return;
-    libvlc_media_player_play(mp, &ex);
-    qDebug() << "After Play";
+    libvlc_vlm_play_media(libvlc, "default", &ex);
     if (catchException()) return;
 }

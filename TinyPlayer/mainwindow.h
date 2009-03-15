@@ -46,7 +46,7 @@ private slots:
     void on_pushButtonPlay_clicked();
     void on_actionOpen_triggered();
     void on_actionQuit_triggered();
-    void on_NewFrameEventFired(struct ctx*);
+    void NewFrameEventFired(struct ctx*);
 
 signals:
     void eventNewFrameFired(struct ctx*);
