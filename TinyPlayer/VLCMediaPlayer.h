@@ -16,6 +16,10 @@ namespace   LibVLCpp
         MediaPlayer(Media* media);
         internalPtr                         getInternalPtr();
         void                                play();
+        void                                pause();
+        qint64                              getTime() const;
+        void                                setTime(qint64 time);
+        qint64                              getLength() const;
     private:
         internalPtr                 _mediaPlayer;
         Exception*                  _ex;

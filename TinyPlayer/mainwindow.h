@@ -10,6 +10,7 @@
 #include "VLCInstance.h"
 #include "VLCMedia.h"
 #include "VLCMediaPlayer.h"
+#include <QTime>
 
 #define VIDEOWIDTH 854
 #define VIDEOHEIGHT 480
@@ -44,10 +45,13 @@ private:
     LibVLCpp::MediaPlayer*  _mediaPlayer;
 
 private slots:
-    void on_pushButtonPlay_clicked();
+    void on_pushButtonNext_clicked();
+    void on_pushButtonPrevious_clicked();
+    void on_pushButtonPlayPause_clicked();
+    void on_pushButtonLaunch_clicked();
     void on_actionOpen_triggered();
     void on_actionQuit_triggered();
-    void on_NewFrameEventFired(struct ctx*);
+    void NewFrameEventFired(struct ctx*);
 
 signals:
     void eventNewFrameFired(struct ctx*);

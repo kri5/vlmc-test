@@ -6,14 +6,14 @@ TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp \
     VLCException.cpp \
-    VLCMedia.cpp \
     VLCInstance.cpp \
-    VLCMediaPlayer.cpp
+    VLCMediaPlayer.cpp \
+    VLCMedia.cpp
 HEADERS += mainwindow.h \
     VLCMedia.h \
     VLCInstance.h \
-    VLCException.h \
-    VLCMediaPlayer.h
+    VLCMediaPlayer.h \
+    VLCException.h
 FORMS += mainwindow.ui
 INCLUDEPATH += /usr/local/include/vlc \
     /usr/local/include/vlc/plugins
