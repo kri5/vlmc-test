@@ -132,7 +132,7 @@ void MainWindow::on_pushButtonLaunch_clicked()
 
     int media_argc = sizeof(media_argv) / sizeof(*media_argv);
 
-    this->_media = new LibVLCpp::Media(this->_instance, currentMedia);
+    this->_media = new LibVLCpp::Media(*(this->_instance), currentMedia);
 
     for (int i = 0; i < media_argc; i++ )
     {
