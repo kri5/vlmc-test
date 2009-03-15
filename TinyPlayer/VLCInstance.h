@@ -2,20 +2,17 @@
 #define VLCINSTANCE_H
 
 #include "vlc/vlc.h"
+#include "VLCpp.hpp"
 #include "VLCException.h"
 
 namespace LibVLCpp
 {
-    class   Instance
+    class   Instance : public Internal<libvlc_instance_t>
     {
     public:
-        typedef libvlc_instance_t*      internalPtr;
-
         Instance(int argc, const char** argv);
-        internalPtr     getInternalPtr();
     private:
         Exception       _ex;
-        internalPtr     _instance;
     };
 }
 

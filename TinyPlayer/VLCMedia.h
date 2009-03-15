@@ -4,22 +4,20 @@
 #include "vlc/vlc.h"
 
 #include <QString>
+
+#include "VLCpp.hpp"
 #include "VLCException.h"
 #include "VLCInstance.h"
 
 namespace LibVLCpp
 {
-    class   Media
+    class   Media : public Internal<libvlc_media_t>
     {
     public:
-        typedef libvlc_media_t*     internalPtr;
-
         Media(Instance* instance, const QString& filename);
         ~Media();
         void            addOption(const char* opt);
-        internalPtr     getInternalPtr();
     private:
-        internalPtr     _media;
         Exception       _ex;
         Instance*       _instance;
     };
