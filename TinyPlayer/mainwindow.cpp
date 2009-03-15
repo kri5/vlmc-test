@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->groupBoxPrevNext->hide();
     errorHandler = new QErrorMessage(this);
     MainWindow::window = this;
-    connect(this, SIGNAL(eventNewFrameFired(struct ctx*)), this, SLOT(NewFrameEventFired(struct ctx*)));
+    connect(this, SIGNAL(eventNewFrameFired(LibVLCpp::Media::DataCtx*)), this, SLOT(NewFrameEventFired(LibVLCpp::Media::DataCtx*)));
     initVLC();
 }
 
@@ -48,24 +48,26 @@ struct ctx
 };
 
 
-void MainWindow::lock(struct ctx *ctx, void **pp_ret)
+void MainWindow::lock(LibVLCpp::Media::DataCtx* ctx, void **pp_ret)
 {
+//    qDebug() << "Debug";
     ctx->mutex->lock();
-    *pp_ret = ctx->pixels;
+    *pp_ret = ctx->pixelBuffer;
 }
 
-void MainWindow::unlock(struct ctx *ctx)
+void MainWindow::unlock(LibVLCpp::Media::DataCtx* ctx)
 {
+//    qDebug() << "Debug unlock";
     MainWindow::window->emit eventNewFrameFired(ctx);
     ctx->mutex->unlock();
 }
 
-void MainWindow::NewFrameEventFired(struct ctx *ctx)
+void MainWindow::NewFrameEventFired(LibVLCpp::Media::DataCtx *ctx)
 {
     QImage image(VIDEOWIDTH, VIDEOHEIGHT, QImage::Format_RGB32);
 
     int x, y;
-    int* src = (int*)ctx->pixels;
+    int* src = (int*)ctx->pixelBuffer;
 
     for (y = 0; y < VIDEOHEIGHT; y++)
     {
@@ -78,10 +80,10 @@ void MainWindow::NewFrameEventFired(struct ctx *ctx)
     }
     QPixmap pix = QPixmap::fromImage(image);
     MainWindow::window->ui->VideoLabel->setPixmap(pix);
-    libvlc_time_t t = libvlc_media_player_get_time(ctx->mp, ctx->ex);
-    QTime dummyTime = QTime();
-    QTime time = dummyTime.addMSecs(t);
-    MainWindow::window->ui->labelTime->setText(time.toString("hh:mm:ss"));
+//    libvlc_time_t t = libvlc_media_player_get_time(ctx->mp, ctx->ex);
+//    QTime dummyTime = QTime();
+//    QTime time = dummyTime.addMSecs(t);
+//    MainWindow::window->ui->labelTime->setText(time.toString("hh:mm:ss"));
 }
 
 void MainWindow::initVLC()
@@ -98,24 +100,16 @@ void MainWindow::initVLC()
 
 void MainWindow::on_pushButtonLaunch_clicked()
 {
-    struct ctx *media;
-    media = (struct ctx*)malloc(sizeof(*media));
-    media->pixels = (uchar*)malloc((sizeof(*(media->pixels)) * VIDEOHEIGHT * VIDEOWIDTH) * 4);
-    media->mutex = new QMutex();
-
-    char clock[64], cunlock[64], cdata[64];
+    LibVLCpp::Media::DataCtx*   dataCtx = LibVLCpp::Media::buildDataCtx();
+//    char clock[64], cunlock[64], cdata[64];
     char width[32], height[32], pitch[32], chroma[32];
     if (currentMedia.isEmpty())
         return;
 
-    sprintf(clock,   ":vmem-lock=%lld", (long long int)(intptr_t)lock);
-    sprintf(cunlock, ":vmem-unlock=%lld", (long long int)(intptr_t)unlock);
-    sprintf(cdata,   ":vmem-data=%lld", (long long int)(intptr_t)media);
     sprintf(width,   ":vmem-width=%i", VIDEOWIDTH);
     sprintf(height,  ":vmem-height=%i", VIDEOHEIGHT);
     sprintf(chroma,  ":vmem-chroma=%s", "RV32");
     sprintf(pitch,   ":vmem-pitch=%i", VIDEOWIDTH * 4);
-    media->media_id = 1;
 
     char const *media_argv[] =
     {
@@ -125,27 +119,25 @@ void MainWindow::on_pushButtonLaunch_clicked()
         height,
         pitch,
         chroma,
-        clock,
-        cunlock,
-        cdata
+//        clock,
+//        cunlock,
+//        cdata
     };
 
     int media_argc = sizeof(media_argv) / sizeof(*media_argv);
 
     this->_media = new LibVLCpp::Media(*(this->_instance), currentMedia);
-
+    this->_media->setDataCtx(dataCtx);
     for (int i = 0; i < media_argc; i++ )
     {
         qDebug() << media_argv[i];
         this->_media->addOption( media_argv[i] );
     }
+    this->_media->setLockCallback(MainWindow::lock);
+    this->_media->setUnlockCallback(MainWindow::unlock);
+
     this->_mediaPlayer = new LibVLCpp::MediaPlayer( this->_media );
     delete this->_media;
-
-    LibVLCpp::Exception*    ex_for_debug = new LibVLCpp::Exception();
-    media->ex = ex_for_debug->getInternalPtr();
-    media->libvlc = this->_instance->getInternalPtr();
-    media->mp = this->_mediaPlayer->getInternalPtr();
 
     this->_mediaPlayer->play();
 
@@ -160,7 +152,7 @@ void MainWindow::on_pushButtonPlayPause_clicked()
         this->_mediaPlayer->play();
         this->ui->groupBoxPrevNext->hide();
         this->ui->pushButtonPlayPause->setText("Pause");
-   }
+    }
     else
     {
         this->_mediaPlayer->pause();

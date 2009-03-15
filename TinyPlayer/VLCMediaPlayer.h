@@ -3,6 +3,8 @@
 
 #include "vlc/vlc.h"
 
+#include <QMutex>
+
 #include "VLCpp.hpp"
 #include "VLCMedia.h"
 #include "VLCException.h"
@@ -19,7 +21,7 @@ namespace   LibVLCpp
         void                                setTime(qint64 time);
         qint64                              getLength();
     private:
-        Exception                   _ex;
+        Exception                           _ex;
     };
 }
 

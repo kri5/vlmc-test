@@ -32,10 +32,10 @@ public:
 
 private:
     void initVLC();
-    static void lock(struct ctx*, void**);
-    static void unlock(struct ctx*);
+    static void lock(LibVLCpp::Media::DataCtx* ctx, void**);
+    static void unlock(LibVLCpp::Media::DataCtx* ctx);
 
-    struct ctx* media;
+//    struct ctx* media;
     QErrorMessage* errorHandler;
     QString currentMedia;
 
@@ -51,10 +51,10 @@ private slots:
     void on_pushButtonLaunch_clicked();
     void on_actionOpen_triggered();
     void on_actionQuit_triggered();
-    void NewFrameEventFired(struct ctx*);
+    void NewFrameEventFired(LibVLCpp::Media::DataCtx*);
 
 signals:
-    void eventNewFrameFired(struct ctx*);
+    void eventNewFrameFired(LibVLCpp::Media::DataCtx*);
 };
 
 #endif // MAINWINDOW_H
