@@ -3,9 +3,9 @@
 
 using namespace LibVLCpp;
 
-Media::Media(Instance& instance, const QString& filename) : _instance(instance)
+Media::Media(Instance* instance, const QString& filename) : _instance(*instance)
 {
-    this->_internalPtr = libvlc_media_new(instance, filename.toLocal8Bit(), this->_ex);
+    this->_internalPtr = libvlc_media_new(this->_instance, filename.toLocal8Bit(), this->_ex);
     this->_ex.checkThrow();
 }
 

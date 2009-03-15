@@ -64,7 +64,7 @@ void MainWindow::unlock(LibVLCpp::Media::DataCtx* ctx)
 
 void MainWindow::NewFrameEventFired(LibVLCpp::Media::DataCtx *ctx)
 {
-    QImage image(VIDEOWIDTH, VIDEOHEIGHT, QImage::Format_RGB32);
+    static QImage image(VIDEOWIDTH, VIDEOHEIGHT, QImage::Format_RGB32);
 
     int x, y;
     int* src = (int*)ctx->pixelBuffer;
@@ -101,7 +101,6 @@ void MainWindow::initVLC()
 void MainWindow::on_pushButtonLaunch_clicked()
 {
     LibVLCpp::Media::DataCtx*   dataCtx = LibVLCpp::Media::buildDataCtx();
-//    char clock[64], cunlock[64], cdata[64];
     char width[32], height[32], pitch[32], chroma[32];
     if (currentMedia.isEmpty())
         return;
@@ -119,18 +118,14 @@ void MainWindow::on_pushButtonLaunch_clicked()
         height,
         pitch,
         chroma,
-//        clock,
-//        cunlock,
-//        cdata
     };
 
     int media_argc = sizeof(media_argv) / sizeof(*media_argv);
 
-    this->_media = new LibVLCpp::Media(*(this->_instance), currentMedia);
+    this->_media = new LibVLCpp::Media(this->_instance, currentMedia);
     this->_media->setDataCtx(dataCtx);
-    for (int i = 0; i < media_argc; i++ )
+    for ( int i = 0; i < media_argc; i++ )
     {
-        qDebug() << media_argv[i];
         this->_media->addOption( media_argv[i] );
     }
     this->_media->setLockCallback(MainWindow::lock);
