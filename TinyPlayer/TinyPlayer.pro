@@ -13,7 +13,8 @@ HEADERS += mainwindow.h \
     VLCMedia.h \
     VLCInstance.h \
     VLCMediaPlayer.h \
-    VLCException.h
+    VLCException.h \
+    VLCpp.hpp
 FORMS += mainwindow.ui
 INCLUDEPATH += /usr/local/include/vlc \
     /usr/local/include/vlc/plugins

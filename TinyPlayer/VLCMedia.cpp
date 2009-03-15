@@ -5,9 +5,8 @@ using namespace LibVLCpp;
 
 Media::Media(Instance* instance, const QString& filename) : _instance(instance)
 {
-    this->_ex = new Exception();
-    this->_media = libvlc_media_new(instance->getInternalPtr(), filename.toLocal8Bit(), this->_ex->getInternalPtr());
-    assert(this->_ex->raised() == Exception::notRaised);
+    this->_media = libvlc_media_new(instance->getInternalPtr(), filename.toLocal8Bit(), this->_ex);
+    this->_ex.checkThrow();
 }
 
 Media::~Media()
@@ -22,6 +21,6 @@ Media::internalPtr      Media::getInternalPtr()
 
 void                    Media::addOption(const char* opt)
 {
-    libvlc_media_add_option(this->_media, opt, this->_ex->getInternalPtr());
-    assert(this->_ex->raised() == Exception::notRaised);
+    libvlc_media_add_option(this->_media, opt, this->_ex);
+    this->_ex.checkThrow();
 }

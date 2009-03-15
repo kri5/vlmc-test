@@ -6,9 +6,8 @@ using namespace LibVLCpp;
 
 Instance::Instance(int argc, const char** argv)
 {
-    this->_ex = new Exception();
-    this->_instance = libvlc_new(argc, argv, this->_ex->getInternalPtr());
-    assert(this->_ex->raised() == Exception::notRaised);
+    this->_instance = libvlc_new(argc, argv, this->_ex);
+    this->_ex.checkThrow();
 }
 
 Instance::internalPtr   Instance::getInternalPtr()

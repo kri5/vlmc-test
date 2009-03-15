@@ -2,26 +2,32 @@
 #define VLCEXCEPTION_H
 
 #include "vlc/vlc.h"
+#include "VLCpp.hpp"
 
 namespace LibVLCpp
 {
-    class   Exception
+    class   Exception : public Internal<libvlc_exception_t>
     {
     public:
-        //Todo, tenter uner surcharge d'operateur de cast generique a partir du interalPtr
-        typedef libvlc_exception_t*      internalPtr;
-
         Exception();
         ~Exception();
-        internalPtr         getInternalPtr();
-        const char*         getErrorText() const;
-        void                clear();
-        int                 raised() const;
 
-        static const int    isRaised = 1;
-        static const int    notRaised = 0;
+        const char*             getErrorText() const;
+        void                    clear();
+        int                     raised() const;
+        void                    checkThrow();
+
+        static const int        Raised = 1;
+        static const int        NotRaised = 0;
+
+        //error handling part :
+        //TODO: have a private error handling in which we could fall back for some specific cases
+        typedef void            (*errorCallback)(const char* msg, void* data);
+        static  void            setErrorCallback(errorCallback, void* data);
+
     private:
-        internalPtr         _ex;
+        static  errorCallback   _errorCallback;
+        static  void*           _datas;
     };
 }
 

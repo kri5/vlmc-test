@@ -20,7 +20,7 @@ namespace LibVLCpp
         internalPtr     getInternalPtr();
     private:
         internalPtr     _media;
-        Exception*      _ex;
+        Exception       _ex;
         Instance*       _instance;
     };
 }

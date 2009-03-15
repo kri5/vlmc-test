@@ -14,7 +14,7 @@ namespace LibVLCpp
         Instance(int argc, const char** argv);
         internalPtr     getInternalPtr();
     private:
-        Exception*      _ex;
+        Exception       _ex;
         internalPtr     _instance;
     };
 }
