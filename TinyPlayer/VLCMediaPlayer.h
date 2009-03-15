@@ -15,6 +15,7 @@ namespace   LibVLCpp
 
         MediaPlayer(Media* media);
         internalPtr                         getInternalPtr();
+        void                                play();
     private:
         internalPtr                 _mediaPlayer;
         Exception*                  _ex;

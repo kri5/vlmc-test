@@ -6,7 +6,7 @@ using namespace LibVLCpp;
 Media::Media(Instance* instance, const QString& filename) : _instance(instance)
 {
     this->_ex = new Exception();
-    libvlc_media_new(instance->getInternalPtr(), filename.toLocal8Bit(), this->_ex->getInternalPtr());
+    this->_media = libvlc_media_new(instance->getInternalPtr(), filename.toLocal8Bit(), this->_ex->getInternalPtr());
     assert(this->_ex->raised() == Exception::notRaised);
 }
 

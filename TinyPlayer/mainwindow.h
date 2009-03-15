@@ -7,9 +7,6 @@
 #include <QtDebug>
 #include <QMutex>
 
-//FIXME: remove this include after binding is completed
-#include "vlc/vlc.h"
-
 #include "VLCInstance.h"
 #include "VLCMedia.h"
 #include "VLCMediaPlayer.h"
@@ -34,7 +31,6 @@ public:
 
 private:
     void initVLC();
-    bool catchException();
     static void lock(struct ctx*, void**);
     static void unlock(struct ctx*);
 
@@ -43,7 +39,6 @@ private:
     QString currentMedia;
 
     // libvlc
-    libvlc_exception_t      ex;
     LibVLCpp::Instance*     _instance;
     LibVLCpp::Media*        _media;
     LibVLCpp::MediaPlayer*  _mediaPlayer;

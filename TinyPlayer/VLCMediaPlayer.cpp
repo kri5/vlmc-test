@@ -14,3 +14,8 @@ MediaPlayer::internalPtr        MediaPlayer::getInternalPtr()
 {
     return this->_mediaPlayer;
 }
+
+void                            MediaPlayer::play()
+{
+    libvlc_media_player_play(this->_mediaPlayer, this->_ex->getInternalPtr());
+}

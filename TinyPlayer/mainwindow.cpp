@@ -36,17 +36,6 @@ void MainWindow::on_actionOpen_triggered()
         ui->pushButtonPlay->setEnabled(true);
 }
 
-bool MainWindow::catchException()
-{
-    if (libvlc_exception_raised(&ex))
-    {
-        errorHandler->showMessage(libvlc_exception_get_message(&ex));
-        libvlc_exception_clear(&ex);
-        return true;
-    }
-    return false;
-}
-
 struct ctx
 {
     int         media_id;
@@ -134,19 +123,14 @@ void MainWindow::on_pushButtonPlay_clicked()
     };
 
     int media_argc = sizeof(media_argv) / sizeof(*media_argv);
-    qDebug() << "Je suis arrive ici, c'est deja pas mal !" << this->_instance->getInternalPtr();
     this->_media = new LibVLCpp::Media(this->_instance, currentMedia);
 
-    qDebug() << "avant la boucle";
     for (int i = 0; i < media_argc; i++ )
     {
         qDebug() << media_argv[i];
         this->_media->addOption( media_argv[i] );
     }
     this->_mediaPlayer = new LibVLCpp::MediaPlayer(this->_media);
-    qDebug() << "After mplayer new from media";
     delete this->_media;
-    libvlc_media_player_play(this->_mediaPlayer->getInternalPtr(), &ex);
-    qDebug() << "After Play";
-    if (catchException()) return;
+    this->_mediaPlayer->play();
 }
