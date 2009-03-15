@@ -17,6 +17,7 @@ namespace   LibVLCpp
         MediaPlayer(Media* media);
         void                                play();
         void                                pause();
+        void                                stop();
         qint64                              getTime();
         void                                setTime(qint64 time);
         qint64                              getLength();

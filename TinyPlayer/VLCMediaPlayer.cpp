@@ -21,6 +21,11 @@ void                            MediaPlayer::pause()
     this->_ex.checkThrow();
 }
 
+void                            MediaPlayer::stop()
+{
+    libvlc_media_player_stop(this->_internalPtr, this->_ex);
+}
+
 qint64                          MediaPlayer::getTime()
 {
     qint64 t = libvlc_media_player_get_time(this->_internalPtr, this->_ex);
