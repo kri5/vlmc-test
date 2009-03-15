@@ -171,8 +171,6 @@ void MainWindow::on_pushButtonPlayPause_clicked()
 
 void MainWindow::on_pushButtonPrevious_clicked()
 {
-    qDebug() << "Previous button";
-    return ;
     qint64 t = this->_mediaPlayer->getTime();
     float fps = 1.0f;//libvlc_media_player_get_fps(this->mp, &ex);
     float interval = (1.0f / fps) * 1000.0f;
@@ -185,8 +183,6 @@ void MainWindow::on_pushButtonPrevious_clicked()
 
 void MainWindow::on_pushButtonNext_clicked()
 {
-    qDebug() << "Next button";
-    return;
     qint64 t = this->_mediaPlayer->getTime();
     float fps = 1.0f;//libvlc_media_player_get_fps(this->mp, &ex);
     float interval = (1.0f / fps) * 1000.0f;
