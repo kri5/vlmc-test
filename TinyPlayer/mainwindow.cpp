@@ -7,10 +7,13 @@ MainWindow* MainWindow::window = NULL;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindowClass)
 {
+    errorHandler = new QErrorMessage(this);
+    if (!QString(libvlc_get_version()).contains("git"))
+        errorHandler->showMessage(QString("%1 may not be a compatible version. Please use the latest GIT trunk.").arg(libvlc_get_version()));
+
     ui->setupUi(this);
     ui->pushButtonPlayPause->hide();
     ui->groupBoxPrevNext->hide();
-    errorHandler = new QErrorMessage(this);
     MainWindow::window = this;
     connect(this, SIGNAL(eventNewFrameFired(LibVLCpp::Media::DataCtx*)), this, SLOT(NewFrameEventFired(LibVLCpp::Media::DataCtx*)));
     initVLC();
