@@ -91,10 +91,11 @@ void MainWindow::NewFrameEventFired(struct ctx *ctx)
     }
     QPixmap pix = QPixmap::fromImage(image);
     MainWindow::window->ui->VideoLabel->setPixmap(pix);
-    libvlc_time_t t = libvlc_media_player_get_time(ctx->mp, ctx->ex);
-    QTime dummyTime = QTime();
-    QTime time = dummyTime.addMSecs(t);
-    MainWindow::window->ui->labelTime->setText(time.toString("hh:mm:ss"));
+    //TODO does not work with vlm
+    //libvlc_time_t t = libvlc_media_player_get_time(ctx->mp, ctx->ex);
+    //QTime dummyTime = QTime();
+    //QTime time = dummyTime.addMSecs(t);
+    //MainWindow::window->ui->labelTime->setText(time.toString("hh:mm:ss"));
 }
 
 void MainWindow::initVLC()
@@ -160,13 +161,13 @@ void MainWindow::on_pushButtonPlayPause_clicked()
 {
     if (this->ui->pushButtonPlayPause->text().compare("Play") == 0)
     {
-        libvlc_media_player_play(this->mp, &ex);
+        libvlc_vlm_play_media(this->libvlc, "default", &ex);
         this->ui->groupBoxPrevNext->hide();
         this->ui->pushButtonPlayPause->setText("Pause");
    }
     else
     {
-        libvlc_media_player_pause(this->mp, &ex);
+        libvlc_vlm_pause_media(this->libvlc, "default", &ex);
         this->ui->groupBoxPrevNext->show();
         this->ui->pushButtonPlayPause->setText("Play");
     }
@@ -174,19 +175,21 @@ void MainWindow::on_pushButtonPlayPause_clicked()
 
 void MainWindow::on_pushButtonPrevious_clicked()
 {
-    libvlc_time_t t = libvlc_media_player_get_time(this->mp, &ex);
+    qDebug() << "TODO: adapt the code to work with vlm!";
+    /*libvlc_time_t t = libvlc_media_player_get_time(this->mp, &ex);
     float fps = 1.0f;//libvlc_media_player_get_fps(this->mp, &ex);
     float interval = (1.0f / fps) * 1000.0f;
     if ((t - interval) > 0.0f)
     {
         t -= (libvlc_time_t)interval;
         libvlc_media_player_set_time(this->mp, t, &ex);
-    }
+    }*/
 }
 
 void MainWindow::on_pushButtonNext_clicked()
 {
-    libvlc_time_t t = libvlc_media_player_get_time(this->mp, &ex);
+    qDebug() << "TODO: adapt the code to work with vlm!";
+    /*libvlc_time_t t = libvlc_media_player_get_time(this->mp, &ex);
     float fps = 1.0f;//libvlc_media_player_get_fps(this->mp, &ex);
     float interval = (1.0f / fps) * 1000.0f;
     if ((t + interval) < libvlc_media_player_get_length(this->mp, &ex))
@@ -194,5 +197,5 @@ void MainWindow::on_pushButtonNext_clicked()
         qDebug() << "in Check";
         t += (libvlc_time_t)interval;
         libvlc_media_player_set_time(this->mp, t, &ex);
-    }
+    }*/
 }
