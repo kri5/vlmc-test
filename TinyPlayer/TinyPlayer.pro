@@ -16,4 +16,4 @@ HEADERS  += mainwindow.h
 FORMS    += mainwindow.ui
 
 INCLUDEPATH += /usr/local/include/vlc /usr/local/include/vlc/plugins
-LIBS = -L/usr/local/ -lvlc
+LIBS = -L/usr/local/lib -lvlc
